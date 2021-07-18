@@ -19,6 +19,8 @@ namespace ConsoleTest
             }
             if (chek == level >> 1) status = true;
 
+
+
             return status;
         }
         
