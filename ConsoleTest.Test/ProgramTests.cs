@@ -10,7 +10,7 @@ namespace ConsoleTest.Test
     {
         [TestMethod]
         public void ChekingSimple_4_TrueReturned()
-        {
+        { 
             int n = 4;
             bool expected = true;
 
@@ -18,6 +18,7 @@ namespace ConsoleTest.Test
 
             Assert.AreEqual(expected, actual);
         }
+        [TestMethod]
         public void ChekingRecurse_4_TrueReturned()
         {
             int n = 4;
@@ -27,6 +28,7 @@ namespace ConsoleTest.Test
 
             Assert.AreEqual(expected, actual);
         }
+        [TestMethod]
         public void ChekingSimple_5_TrueReturned()
         {
             int n = 5;
@@ -36,6 +38,7 @@ namespace ConsoleTest.Test
 
             Assert.AreEqual(expected, actual);
         }
+        [TestMethod]
         public void ChekingRecurse_5_TrueReturned()
         {
             int n = 5;
@@ -45,7 +48,7 @@ namespace ConsoleTest.Test
 
             Assert.AreEqual(expected, actual);
         }
-
+        [TestMethod]
         public void ChekingSimple_2_TrueReturned()
         {
             int n = 2;
@@ -55,6 +58,7 @@ namespace ConsoleTest.Test
 
             Assert.AreEqual(expected, actual);
         }
+        [TestMethod]
         public void ChekingRecurse_2_TrueReturned()
         {
             int n = 2;
@@ -64,7 +68,7 @@ namespace ConsoleTest.Test
 
             Assert.AreEqual(expected, actual);
         }
-
+        [TestMethod]
         public void ChekingSimple_0_TrueReturned()
         {
             int n = 0;
@@ -74,6 +78,7 @@ namespace ConsoleTest.Test
 
             Assert.AreEqual(expected, actual);
         }
+        [TestMethod]
         public void ChekingRecurse_0_TrueReturned()
         {
             int n = 0;
@@ -83,38 +88,41 @@ namespace ConsoleTest.Test
 
             Assert.AreEqual(expected, actual);
         }
-
+        [TestMethod]
         public void ChekingSimple_6_FalseReturned()
         {
             int n = 6;
-            bool expected = false;
+            bool expected = true;
 
             bool actual = MyProgram.ChekingSimple(n);
 
             Assert.AreEqual(expected, actual);
         }
+        [TestMethod]
         public void ChekingRecurse_6_FalseReturned()
         {
             int n = 6;
-            bool expected = false;
+            bool expected = true;
 
             bool actual = MyProgram.ChekingRecurse(n);
 
             Assert.AreEqual(expected, actual);
         }
+        [TestMethod]
         public void ChekingSimple_3_FalseReturned()
         {
             int n = 3;
-            bool expected = false;
+            bool expected = true;
 
             bool actual = MyProgram.ChekingSimple(n);
 
             Assert.AreEqual(expected, actual);
         }
+        [TestMethod]
         public void ChekingRecurse_3_FalseReturned()
         {
             int n = 3;
-            bool expected = false;
+            bool expected = true;
 
             bool actual = MyProgram.ChekingRecurse(n);
 

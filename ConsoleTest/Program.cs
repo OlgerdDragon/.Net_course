@@ -9,7 +9,7 @@ namespace ConsoleTest
             bool status = false;
             int level = LevelCalc(n);
             int chek = 0;
-
+             
             if (n % 2 == 1) level--;
             for (int i = 0; i < level >> 1; i++)
             {
@@ -67,10 +67,11 @@ namespace ConsoleTest
         static void Main(string[] args)
         {
             
-                int n = 0;
+                int n = 3;
                 Console.WriteLine(ChekingSimple(n));
                 Console.WriteLine(ChekingRecurse(n));
-            
+            int[3][] arg;
+
             
         }
     }
