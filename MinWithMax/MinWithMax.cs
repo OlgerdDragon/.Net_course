@@ -2,11 +2,13 @@
 
 namespace MinWithMax
 {
-    class MinWithMax
+    public class MinWithMax
     {
 
-        static int Serch(int[][] mas)
+        public static int Serch(int[][] mas)
         {
+            try 
+            { 
             int[] max = new int[mas.Length];
 
             for (int i = 0; i < mas.Length; i++)
@@ -17,7 +19,7 @@ namespace MinWithMax
                     if (max[i] < mas[i][j])
                         max[i] = mas[i][j];
                 }
-                
+
             }
             int min = max[0];
             for (int i = 1; i < max.Length; i++)
@@ -26,7 +28,13 @@ namespace MinWithMax
                     min = max[i];
             }
 
-            return min;
+            return min; 
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.ToString());
+            }
         }
         static void Main(string[] args)
         {

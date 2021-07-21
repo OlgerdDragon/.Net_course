@@ -9,7 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTest.Test", "Console
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTests", "ConsoleTests\ConsoleTests.csproj", "{DCB60904-F787-4545-9945-8AE4F227F125}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinWithMax", "MinWithMax\MinWithMax.csproj", "{BCC4D7BF-A147-487C-9F4B-4FECE4B9554F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinWithMax", "MinWithMax\MinWithMax.csproj", "{BCC4D7BF-A147-487C-9F4B-4FECE4B9554F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinWithMax.Tests", "MinWithMax.Tests\MinWithMax.Tests.csproj", "{F18A7DB5-2ACC-41B8-A536-BC0465E3265A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{BCC4D7BF-A147-487C-9F4B-4FECE4B9554F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCC4D7BF-A147-487C-9F4B-4FECE4B9554F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCC4D7BF-A147-487C-9F4B-4FECE4B9554F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F18A7DB5-2ACC-41B8-A536-BC0465E3265A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F18A7DB5-2ACC-41B8-A536-BC0465E3265A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F18A7DB5-2ACC-41B8-A536-BC0465E3265A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F18A7DB5-2ACC-41B8-A536-BC0465E3265A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

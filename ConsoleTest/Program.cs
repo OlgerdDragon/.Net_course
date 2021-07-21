@@ -70,7 +70,7 @@ namespace ConsoleTest
                 int n = 3;
                 Console.WriteLine(ChekingSimple(n));
                 Console.WriteLine(ChekingRecurse(n));
-            int[3][] arg;
+            
 
             
         }
