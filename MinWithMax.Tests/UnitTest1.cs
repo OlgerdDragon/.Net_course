@@ -49,7 +49,8 @@ namespace MinWithMax.Tests
             }
             catch (Exception e)
             {
-
+                Console.WriteLine(e.ToString());
+                
             }
 
             
