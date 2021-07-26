@@ -9,27 +9,97 @@ namespace ManWhoWentShopping
         public Product SearchNeededProduct(Product neededProduct);
 
     }
-    
-    class Wife
+    interface IMan
     {
-        public List<Product> Product = new List<Product>();
+
+    }
+    interface IWoman
+    {
+        void AddWanted(string name);
+        public List<Product> GetWantedList();
+    }
+    interface IProduct
+    {
+
+    }
+    interface Itower
+    {
+
+    }
+
+    class Wife: IWoman
+    {
+        public List<Product> productList = new List<Product>();
         public void AddWanted(string name)
         {
-            Product.Add(new Product(name));
+            productList.Add(new Product(name));
         }
+        public List<Product> GetWantedList()
+        {
+            productList?.Clear();
+            
+            AddWanted("Sony");
+            AddWanted("Bread");
+            AddWanted("Lenovo");
+            AddWanted("Onion");
+            
+            return productList;
+        }
+
 
     }
     class Husband
     {
-        public List<Product> product = new List<Product>();
-
-        public void CreateTaskList(List<Product> taskList)
-        {
-            product = taskList;
-        }
+        public List<Product> productWantedList;
         public List<Product> SearchedProduct = new List<Product>();
+
+        List<Wife> womans = new List<Wife>();
+
+        public void AddWomen()
+        {
+            womans.Add(new Wife());
+        }
+        void SetWantedList(IWoman woman)
+        {
+            productWantedList = woman.GetWantedList();
+        }
+        
+        public void SearchProduct(List<Shop> shops)
+        {
+            foreach (var woman in womans)
+            {
+                SetWantedList(woman);
+                foreach (var item in shops)
+                {
+                    foreach (var neededProduct in productWantedList)
+                    {
+                        Product searched = item.SearchNeededProduct(neededProduct);
+                        if (searched != null)
+                            SearchedProduct.Add(new Product(searched));
+                    }
+
+                }
+            }
+            
+        }
+        
+        public void ShowShearcheRezult()
+        {
+            Console.WriteLine("Bought:");
+            if (SearchedProduct.Count != 0)
+            {
+                int totalPrice = 0;
+                foreach (var product in SearchedProduct)
+                {
+                    Console.WriteLine(product.Name + " - " + product.Price);
+                    totalPrice += product.Price;
+                }
+                Console.WriteLine(" Total price = " + totalPrice);
+            }
+            else Console.WriteLine("I runing in ALL shops, but haven't what you want!");
+        }
     }
-    class Product
+    class Product : IProduct
     {
         public string Name { get; set; }
         public int Price { get; set; }
@@ -47,8 +117,6 @@ namespace ManWhoWentShopping
             Name = a.Name;
             Price = a.Price;
         }
-
-
 
     }
     class Shop : IShop
@@ -74,15 +142,34 @@ namespace ManWhoWentShopping
                     return itemProduct;
                 }
             }
-            
+
             return null;
         }
     }
-
-    class Shopping
+    class Tower
     {
-        static List<Shop> shops = new List<Shop>();
-        static void UploadProductList()
+        List<Shop> shops = new List<Shop>();
+        
+        Husband pedro = new Husband();
+        public void NewDay()
+        {
+            CreateShops();
+            pedro.AddWomen();
+            pedro.SearchProduct(shops);
+            ConsoleShowAllProductList();
+            pedro.ShowShearcheRezult();
+        }
+        void CreateShops()
+        {
+            ShopsLockated();
+            UploadProductList();
+        }
+        void ShopsLockated()
+        {
+            shops.Add(new Shop("multiElectric"));
+            shops.Add(new Shop("yourGarden"));
+        }
+        void UploadProductList()
         {
             shops[0].Add("Sony", 100);
             shops[0].Add("Samsung", 80);
@@ -95,31 +182,9 @@ namespace ManWhoWentShopping
             shops[1].Add("Poteto", 40);
             shops[1].Add("Ramen", 100);
         }
-        static void Main(string[] args)
+        
+        public void ConsoleShowAllProductList()
         {
-            Wife white = new Wife();
-            white.AddWanted("Sony");
-            white.AddWanted("Bread");
-            white.AddWanted("Lenovo");
-            white.AddWanted("Onion");
-
-            Husband pedro = new Husband();
-            pedro.CreateTaskList(white.Product);
-
-            shops.Add(new Shop("multiElectric"));
-            shops.Add(new Shop("yourGarden"));
-            UploadProductList();
-
-            foreach (var item in shops)
-            {
-                foreach (var neededProduct in pedro.product)
-                {
-                    Product searched = item.SearchNeededProduct(neededProduct);
-                    if (searched != null)
-                        pedro.SearchedProduct.Add(new Product(searched));
-                }
-                
-            }
             Console.WriteLine("Total list:");
             foreach (var shop in shops)
             {
@@ -129,18 +194,21 @@ namespace ManWhoWentShopping
                 }
             }
             Console.WriteLine("");
+        }
+    }
+    class Shopping
+    {
+        static void Start()
+        {
+            Tower Pogrebichche = new Tower();
+            Pogrebichche.NewDay();
+            
 
-            Console.WriteLine("Bought:");
-            if (pedro.SearchedProduct.Count != 0)
-            {
-                int totalPrice = 0;
-                foreach (var product in pedro.SearchedProduct)
-                {
-                    Console.WriteLine(product.Name + " - " + product.Price);
-                    totalPrice += product.Price;
-                }
-                Console.WriteLine(" Total price = " + totalPrice);
-            }
+        }
+        static void Main(string[] args)
+        {
+            Start();
+            
         }
     }
 }
