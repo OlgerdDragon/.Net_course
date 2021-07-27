@@ -11,25 +11,31 @@ namespace ManWhoWentShopping
     }
     interface IMan
     {
+        public void AddWomen();
+        public void SearchProduct(List<Shop> shops);
 
     }
     interface IWoman
     {
+        public List<Product> boughtList { get; set; }
         void AddWanted(string name);
         public List<Product> GetWantedList();
     }
-    interface IProduct
+    interface IThing
     {
+        public string Name { get; set; }
+        public int Price { get; set; }
 
     }
     interface Itower
     {
-
+        public void NewDay();
     }
 
     class Wife: IWoman
     {
         public List<Product> productList = new List<Product>();
+        public List<Product> boughtList { get; set; }
         public void AddWanted(string name)
         {
             productList.Add(new Product(name));
@@ -48,7 +54,7 @@ namespace ManWhoWentShopping
 
 
     }
-    class Husband
+    class Husband :IMan
     {
         public List<Product> productWantedList;
         public List<Product> SearchedProduct = new List<Product>();
@@ -63,7 +69,12 @@ namespace ManWhoWentShopping
         {
             productWantedList = woman.GetWantedList();
         }
-        
+        void GetWantedList(IWoman woman)
+        {
+            woman.boughtList = SearchedProduct;
+        }
+
+
         public void SearchProduct(List<Shop> shops)
         {
             foreach (var woman in womans)
@@ -77,10 +88,8 @@ namespace ManWhoWentShopping
                         if (searched != null)
                             SearchedProduct.Add(new Product(searched));
                     }
-
                 }
             }
-            
         }
         
         public void ShowShearcheRezult()
@@ -99,10 +108,12 @@ namespace ManWhoWentShopping
             else Console.WriteLine("I runing in ALL shops, but haven't what you want!");
         }
     }
-    class Product : IProduct
+    
+    class Product : IThing
     {
         public string Name { get; set; }
         public int Price { get; set; }
+        
         public Product(string name)
         {
             Name = name;
@@ -146,7 +157,7 @@ namespace ManWhoWentShopping
             return null;
         }
     }
-    class Tower
+    class Tower :Itower
     {
         List<Shop> shops = new List<Shop>();
         
@@ -196,7 +207,7 @@ namespace ManWhoWentShopping
             Console.WriteLine("");
         }
     }
-    class Shopping
+    class Shopping 
     {
         static void Start()
         {
