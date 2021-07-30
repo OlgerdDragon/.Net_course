@@ -27,18 +27,18 @@ namespace ManWhoWentShopping
         public int Price { get; set; }
 
     }
-    interface Itower
+    interface ITown
     {
         public void NewDay();
     }
 
-    class Wife: IWoman
+    public class Wife: IWoman
     {
         public List<Product> productList = new List<Product>();
         public List<Product> boughtList { get; set; }
         public void AddWanted(string name)
         {
-            productList.Add(new Product(name));
+            productList.Add(Get.Product(name));
         }
         public List<Product> GetWantedList()
         {
@@ -51,19 +51,17 @@ namespace ManWhoWentShopping
             
             return productList;
         }
-
-
     }
-    class Husband :IMan
+    public class Husband :IMan
     {
         public List<Product> productWantedList;
-        public List<Product> SearchedProduct = new List<Product>();
+        public List<Product> searchedProduct = new List<Product>();
 
         List<Wife> womans = new List<Wife>();
 
         public void AddWomen()
         {
-            womans.Add(new Wife());
+            womans.Add(Get.Wife());
         }
         void SetWantedList(IWoman woman)
         {
@@ -71,12 +69,12 @@ namespace ManWhoWentShopping
         }
         void GetWantedList(IWoman woman)
         {
-            woman.boughtList = SearchedProduct;
+            woman.boughtList = searchedProduct;
         }
-
 
         public void SearchProduct(List<Shop> shops)
         {
+            if (shops == null) throw new NullReferenceException();
             foreach (var woman in womans)
             {
                 SetWantedList(woman);
@@ -86,19 +84,20 @@ namespace ManWhoWentShopping
                     {
                         Product searched = item.SearchNeededProduct(neededProduct);
                         if (searched != null)
-                            SearchedProduct.Add(new Product(searched));
+                            searchedProduct.Add(Get.Product(searched));
                     }
                 }
+                GetWantedList(woman);
             }
         }
         
         public void ShowShearcheRezult()
         {
             Console.WriteLine("Bought:");
-            if (SearchedProduct.Count != 0)
+            if (searchedProduct.Count != 0)
             {
                 int totalPrice = 0;
-                foreach (var product in SearchedProduct)
+                foreach (var product in searchedProduct)
                 {
                     Console.WriteLine(product.Name + " - " + product.Price);
                     totalPrice += product.Price;
@@ -109,7 +108,7 @@ namespace ManWhoWentShopping
         }
     }
     
-    class Product : IThing
+    public class Product : IThing
     {
         public string Name { get; set; }
         public int Price { get; set; }
@@ -130,7 +129,7 @@ namespace ManWhoWentShopping
         }
 
     }
-    class Shop : IShop
+    public class Shop : IShop
     {
         public string Name {get;set;}
         public Shop(string name = "default")
@@ -141,7 +140,7 @@ namespace ManWhoWentShopping
         
         public void Add(string name, int price)
         {
-            product.Add(new Product(name,price));
+            product.Add(Get.Product(name,price));
         }
 
         public Product SearchNeededProduct(Product neededProduct)
@@ -157,11 +156,11 @@ namespace ManWhoWentShopping
             return null;
         }
     }
-    class Tower :Itower
+    public class Town :ITown
     {
         List<Shop> shops = new List<Shop>();
         
-        Husband pedro = new Husband();
+        Husband pedro = Get.Husband();
         public void NewDay()
         {
             CreateShops();
@@ -177,8 +176,8 @@ namespace ManWhoWentShopping
         }
         void ShopsLockated()
         {
-            shops.Add(new Shop("multiElectric"));
-            shops.Add(new Shop("yourGarden"));
+            shops.Add(Get.Shop("multiElectric"));
+            shops.Add(Get.Shop("yourGarden"));
         }
         void UploadProductList()
         {
@@ -211,7 +210,7 @@ namespace ManWhoWentShopping
     {
         static void Start()
         {
-            Tower Pogrebichche = new Tower();
+            Town Pogrebichche = new Town();
             Pogrebichche.NewDay();
             
 
@@ -220,6 +219,38 @@ namespace ManWhoWentShopping
         {
             Start();
             
+        }
+    }
+
+    class Get
+    { 
+        static public Wife Wife()
+        {
+            return new Wife();
+        }
+        static public Husband Husband()
+        {
+            return new Husband();
+        }
+        static public Shop Shop(string name = "default")
+        {
+            return new Shop(name);
+        }
+        static public Product Product(string name)
+        {
+            return new Product(name);
+        }
+        static public Product Product(string name, int price)
+        {
+            return new Product(name,price);
+        }
+        static public Product Product(Product a)
+        {
+            return new Product(a);
+        }
+        static public Town Town()
+        {
+            return new Town();
         }
     }
 }
