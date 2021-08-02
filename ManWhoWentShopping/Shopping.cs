@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ManWhoWentShopping
 {
@@ -159,20 +160,36 @@ namespace ManWhoWentShopping
     public class Town :ITown
     {
         List<Shop> shops = new List<Shop>();
-        
-        Husband pedro = Get.Husband();
+        List<Husband> husbands = new List<Husband>();
+        List<Task> tasks = new List<Task>();
         public void NewDay()
         {
             CreateShops();
-            pedro.AddWomen();
-            pedro.SearchProduct(shops);
+            CreateHusbands();
+
+            foreach (var husband in husbands)
+            {
+                husband.SearchProduct(shops);
+            }
+            
             ConsoleShowAllProductList();
-            pedro.ShowShearcheRezult();
+            foreach (var husband in husbands)
+            {
+                husband.ShowShearcheRezult();
+            }
         }
         void CreateShops()
         {
             ShopsLockated();
             UploadProductList();
+        }
+        void CreateHusbands()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                husbands.Add(Get.Husband());
+                husbands[i].AddWomen();
+            }
         }
         void ShopsLockated()
         {
@@ -210,7 +227,7 @@ namespace ManWhoWentShopping
     {
         static void Start()
         {
-            Town Pogrebichche = new Town();
+            Town Pogrebichche = Get.Town();
             Pogrebichche.NewDay();
             
 
