@@ -8,20 +8,25 @@ namespace AsyncEquation
     class Program
     {
         static List<double> mass = new List<double>();
-
+        static List<Task> taskList = new List<Task>();
         static void Main(string[] args)
         {
-            List<Task> taskList = new List<Task>();
             
-            for (int i = 1; i <= 10; i++)
-            {
-                taskList.Add( Task.Run(() => AsyncCalculate(i)) );
-            }
-            Task.WaitAll(taskList.ToArray());
+            int count = 10;
 
+            CalculateEguation(count);
 
             //Thread.Sleep(10000);
         }
+        static void CalculateEguation(int count)
+        {
+            for (int i = 1; i <= count; i++)
+            {
+                taskList.Add(Task.Run(() => AsyncCalculate(i)));
+            }
+            Task.WaitAll(taskList.ToArray());
+        }
+    
         static async void AsyncCalculate(int num)
         {
             int divide = await Task.Run(() => AsyncDivide(num));
