@@ -166,18 +166,24 @@ namespace ManWhoWentShopping
         {
             CreateShops();
             CreateHusbands();
-
-            foreach (var husband in husbands)
-            {
-                husband.SearchProduct(shops);
-            }
+            Runsearching(husbands);
             
+
             ConsoleShowAllProductList();
             foreach (var husband in husbands)
             {
                 husband.ShowShearcheRezult();
             }
         }
+        async void Runsearching(List<Husband> men)
+        {
+            foreach (var man in men)
+            {
+                tasks.Add(Task.Run(() => man.SearchProduct(shops)));
+            }
+            await Task.WhenAll(tasks.ToArray());
+        }
+
         void CreateShops()
         {
             ShopsLockated();
