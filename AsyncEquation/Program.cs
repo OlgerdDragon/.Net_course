@@ -5,42 +5,33 @@ using System.Threading.Tasks;
 
 namespace AsyncEquation
 {
-    class Program
+    public class ProgramEquation
     {
-        static List<double> mass = new List<double>();
-        static List<Task> taskList = new List<Task>();
+        public static double value;
         static void Main(string[] args)
         {
             
             int count = 10;
 
-            CalculateEguation(count);
+            AsyncCalculate(count);
 
-            //Thread.Sleep(10000);
+            
+            Console.ReadLine();
         }
-        static void CalculateEguation(int count)
+        public static async void AsyncCalculate(int num)
         {
-            for (int i = 1; i <= count; i++)
-            {
-                taskList.Add(Task.Run(() => AsyncCalculate(i)));
-            }
-            Task.WaitAll(taskList.ToArray());
-        }
-    
-        static async void AsyncCalculate(int num)
-        {
-            int divide = await Task.Run(() => AsyncDivide(num));
-            int divisor = await Task.Run(() => AsyncDivisor(num));
+            double divide = await Task.Run(() => AsyncDivide(num));
+            double divisor = await Task.Run(() => AsyncDivisor(num));
 
             Equation(divide, divisor);
+            
         }
-        static void Equation(double divide, double divisor)
+        public static void Equation(double divide, double divisor)
         {
-            double y = divide / divisor;
-            mass.Add(y);
-            Console.WriteLine(y);
+            value = divide / divisor;
+            Console.WriteLine(value);
         }
-        static int AsyncDivide(int num)
+        public static int AsyncDivide(int num)
         {
             int result = 0;
             for (int i = 1; i <= num; i++)
@@ -49,7 +40,7 @@ namespace AsyncEquation
             }
             return result;
         }
-        static int AsyncDivisor(int num)
+        public static int AsyncDivisor(int num)
         {
             int result = 0;
             for (int i = 1; i <= num; i++)

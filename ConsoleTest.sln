@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncTest", "AsyncTest\Asyn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncEquation", "AsyncEquation\AsyncEquation.csproj", "{A0918795-A0F8-494C-A269-6944251F972D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncEquation.Tests", "AsyncEquation.Tests\AsyncEquation.Tests.csproj", "{0E310327-7A80-4FAA-8BE1-CCB8C00C8B96}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{A0918795-A0F8-494C-A269-6944251F972D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0918795-A0F8-494C-A269-6944251F972D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0918795-A0F8-494C-A269-6944251F972D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E310327-7A80-4FAA-8BE1-CCB8C00C8B96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E310327-7A80-4FAA-8BE1-CCB8C00C8B96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E310327-7A80-4FAA-8BE1-CCB8C00C8B96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E310327-7A80-4FAA-8BE1-CCB8C00C8B96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
