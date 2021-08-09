@@ -22,24 +22,21 @@ namespace ProducerVSConsumer
             new Thread(new ThreadStart(ConsumerJob)).Start();
 
             Random rng = new Random(0);
-            for (int i = 0; i < 10; i++)
+            while (true)
             {
-                Console.WriteLine("Producing {0}", i);
-                queue.Produce(i);
-                Thread.Sleep(1000 * rng.Next(3));
+                
+                queue.Produce();
+                Thread.Sleep(1000 * rng.Next(1,3));
             }
         }
 
         static void ConsumerJob()
         {
-            
             Random rng = new Random(1);
-            
-            for (int i = 0; i < 10; i++)
+            while (true)
             {
                 object o = queue.Consume();
                 Console.WriteLine("\t\t\t\tConsuming {0}", o);
-                Thread.Sleep(rng.Next(1000));
             }
         }
     }
@@ -48,14 +45,16 @@ namespace ProducerVSConsumer
     {
         readonly object listLock = new object();
         Queue queue = new Queue();
-
-        public void Produce(object o)
+        Random rnd = new Random();
+        public void Produce()
         {
+            int num = rnd.Next(1,100);
+            
             lock (listLock)
             {
-                queue.Enqueue(o);
-
-                      
+                Thread.Sleep(1000 * rnd.Next(1, 3));
+                queue.Enqueue(num);
+                Console.WriteLine("Producing " + num);
                 Monitor.Pulse(listLock);
             }
         }
@@ -64,10 +63,9 @@ namespace ProducerVSConsumer
         {
             lock (listLock)
             {
-                
+                Thread.Sleep(1000 * rnd.Next(6, 9));
                 while (queue.Count == 0)
                 {
-                    
                     Monitor.Wait(listLock);
                 }
                 return queue.Dequeue();
