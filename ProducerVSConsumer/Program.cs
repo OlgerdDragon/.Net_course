@@ -48,10 +48,9 @@ namespace ProducerVSConsumer
         Random rnd = new Random();
         public void Produce()
         {
-            int num = rnd.Next(1,100);
-            
             lock (listLock)
             {
+                int num = rnd.Next(1, 100);
                 Thread.Sleep(1000 * rnd.Next(1, 3));
                 queue.Enqueue(num);
                 Console.WriteLine("Producing " + num);
