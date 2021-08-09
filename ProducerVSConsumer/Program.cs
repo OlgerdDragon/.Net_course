@@ -50,8 +50,12 @@ namespace ProducerVSConsumer
         {
             lock (listLock)
             {
+                while (queue.Count == 1)
+                {
+                    Monitor.Wait(listLock);
+                }
                 int num = rnd.Next(1, 100);
-                Thread.Sleep(1000 * rnd.Next(1, 3));
+                Thread.Sleep(1000 * rnd.Next(3, 9));
                 queue.Enqueue(num);
                 Console.WriteLine("Producing " + num);
                 Monitor.Pulse(listLock);
@@ -62,7 +66,7 @@ namespace ProducerVSConsumer
         {
             lock (listLock)
             {
-                Thread.Sleep(1000 * rnd.Next(6, 9));
+                Thread.Sleep(1000 * rnd.Next(3, 9));
                 while (queue.Count == 0)
                 {
                     Monitor.Wait(listLock);
