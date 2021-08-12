@@ -7,6 +7,18 @@ using System.Threading.Tasks;
 
 namespace ProducerVSConsumer
 {
+    interface IPeople
+    {
+        public void SetResourse(ref List<Resourse> res, int num);
+    }
+    interface IProducer
+    {
+        public void Produce();
+    }
+    interface IConsumer
+    {
+        public object Consume();
+    }
     class Program
     {
 
@@ -33,9 +45,9 @@ namespace ProducerVSConsumer
         }
         static void SetWorkZone()
         {
-            producers.Add(Get.Producer());
-            consumers.Add(Get.Consumer());
-            resourses.Add(Get.Resourse());
+            producers.Add(Factory.Producer());
+            consumers.Add(Factory.Consumer());
+            resourses.Add(Factory.Resourse());
             
             
             producers[0].SetResourse(ref resourses, 0);
@@ -59,7 +71,8 @@ namespace ProducerVSConsumer
         public object listLock = new object();
         public Queue queue = new Queue();
     }
-    public class People : Resourse
+    
+    public class People : Resourse , IPeople
     {
         public void SetResourse(ref List<Resourse> res, int num)
         {
@@ -67,7 +80,7 @@ namespace ProducerVSConsumer
             queue = res[num].queue;
         }
     }
-    public class Producer : People
+    public class Producer : People , IProducer
     {
         Random rnd = new Random();
         public void Produce()
@@ -85,10 +98,8 @@ namespace ProducerVSConsumer
                 Monitor.Pulse(listLock);
             }
         }
-
-        
     }
-    public class Consumer : People
+    public class Consumer : People , IConsumer
     {
         Random rnd = new Random();
         public object Consume()
@@ -104,7 +115,7 @@ namespace ProducerVSConsumer
             }
         }
     }
-    class Get
+    class Factory
     {
         static public Resourse Resourse()
         {
