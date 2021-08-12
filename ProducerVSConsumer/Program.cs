@@ -10,41 +10,65 @@ namespace ProducerVSConsumer
     class Program
     {
 
-        static ProducerConsumer queue;
-
+        static List<Producer> producers = new List<Producer>();
+        static List<Consumer> consumers = new List<Consumer>();
+        static List<Resourse> resourses = new List<Resourse>();
         static void Main()
         {
             Start();
         }
         static void Start()
         {
-            queue = new ProducerConsumer();
+            SetWorkZone();
             new Thread(new ThreadStart(ConsumerJob)).Start();
-
-            Random rng = new Random(0);
+            Random rnd = new Random(0);
             while (true)
             {
-                
-                queue.Produce();
-                Thread.Sleep(1000 * rng.Next(1,3));
+                foreach (var producer in producers)
+                {
+                    producer.Produce();
+                    Thread.Sleep(1000 * rnd.Next(1, 3));
+                }
             }
         }
+        static void SetWorkZone()
+        {
+            producers.Add(Get.Producer());
+            consumers.Add(Get.Consumer());
+            resourses.Add(Get.Resourse());
+            
+            
+            producers[0].SetResourse(ref resourses, 0);
+            consumers[0].SetResourse(ref resourses, 0);
 
+        }
         static void ConsumerJob()
         {
-            Random rng = new Random(1);
             while (true)
             {
-                object o = queue.Consume();
-                Console.WriteLine("\t\t\t\tConsuming {0}", o);
+                foreach (var consumer in consumers)
+                {
+                    object o = consumer.Consume();
+                    Console.WriteLine("\t\t\t\tConsuming {0}", o);
+                }
             }
         }
     }
-
-    public class ProducerConsumer
+    public class Resourse
     {
-        readonly object listLock = new object();
-        Queue queue = new Queue();
+        public object listLock = new object();
+        public Queue queue = new Queue();
+    }
+    public class People : Resourse
+    {
+        public void SetResourse(ref List<Resourse> res, int num)
+        {
+            listLock = res[num].listLock;
+            queue = res[num].queue;
+        }
+    }
+    public class Producer : People
+    {
         Random rnd = new Random();
         public void Produce()
         {
@@ -62,6 +86,11 @@ namespace ProducerVSConsumer
             }
         }
 
+        
+    }
+    public class Consumer : People
+    {
+        Random rnd = new Random();
         public object Consume()
         {
             lock (listLock)
@@ -75,6 +104,23 @@ namespace ProducerVSConsumer
             }
         }
     }
+    class Get
+    {
+        static public Resourse Resourse()
+        {
+            return new Resourse();
+        }
+        static public Producer Producer()
+        {
+            return new Producer();
+        }
+        static public Consumer Consumer()
+        {
+            return new Consumer();
+        }
+        
+    }
+
 }
     
 
