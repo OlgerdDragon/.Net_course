@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ManWhoWentShopping
 {
@@ -20,7 +22,7 @@ namespace ManWhoWentShopping
     {
         public List<Product> boughtList { get; set; }
         void AddWanted(string name);
-        public List<Product> GetWantedList();
+        public string GetWantedList();
     }
     interface IThing
     {
@@ -41,7 +43,7 @@ namespace ManWhoWentShopping
         {
             productList.Add(Get.Product(name));
         }
-        public List<Product> GetWantedList()
+        public string GetWantedList()
         {
             productList?.Clear();
             
@@ -49,8 +51,9 @@ namespace ManWhoWentShopping
             AddWanted("Bread");
             AddWanted("Lenovo");
             AddWanted("Onion");
-            
-            return productList;
+
+            string jsonWantedList = JsonSerializer.Serialize<List<Product>>(productList);
+            return jsonWantedList;
         }
     }
     public class Husband :IMan
@@ -65,8 +68,9 @@ namespace ManWhoWentShopping
             womans.Add(Get.Wife());
         }
         void SetWantedList(IWoman woman)
-        {
-            productWantedList = woman.GetWantedList();
+        { 
+            string jsonWantedList = woman.GetWantedList();
+            productWantedList = JsonSerializer.Deserialize<List<Product>>(jsonWantedList);
         }
         void GetWantedList(IWoman woman)
         {
