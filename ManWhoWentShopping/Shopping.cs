@@ -21,10 +21,10 @@ namespace ManWhoWentShopping
     }
     interface IWoman
     {
-        public List<Product> boughtList { get; set; }
+        public string boughtList { get; set; }
         void AddWanted(string name);
-        public List<Product> GetWantedList();
-        //public string GetWantedList();
+        //public List<Product> GetWantedList();
+        public string GetWantedList();
     }
     interface IThing
     {
@@ -39,21 +39,23 @@ namespace ManWhoWentShopping
 
     public class Wife: IWoman
     {
+        public string Name { get; set; }
         Random rnd = new Random();
         public List<Product> productList = new List<Product>();
-        public List<Product> boughtList { get; set; }
+        public string boughtList { get; set; }
         public bool manCanSearch = false;
         public object listMark = new object();
-        public Wife()
+        public Wife(string name = "Julia")
         {
+            Name = name;
             new Thread(new ThreadStart(WifeJob)).Start();
         }
         public void AddWanted(string name)
         {
             productList.Add(Get.Product(name));
         }
-        //public string GetWantedList()
-        public List<Product> GetWantedList()
+        public string GetWantedList()
+        //public List<Product> GetWantedList()
         {
             productList?.Clear();
             
@@ -62,10 +64,10 @@ namespace ManWhoWentShopping
             AddWanted("Lenovo");
             AddWanted("Onion");
 
-            //string jsonWantedList = JsonSerializer.Serialize<List<Product>>(productList);
-            //return jsonWantedList;
+            string jsonWantedList = JsonSerializer.Serialize<List<Product>>(productList);
+            return jsonWantedList;
 
-            return productList;
+            //return productList;
 
         }
         void WifeJob()
@@ -78,7 +80,7 @@ namespace ManWhoWentShopping
                     {
                         Monitor.Wait(listMark);
                     }
-                    Thread.Sleep(1000 * rnd.Next(1, 3));
+                    Thread.Sleep(1000 * rnd.Next(1, 10));
 
                     manCanSearch = true;
                     Monitor.Pulse(listMark);
@@ -90,14 +92,17 @@ namespace ManWhoWentShopping
 
     public class Husband :IMan
     {
+        public string Name { get; set; }
         Random rnd = new Random();
         public List<Product> productWantedList;
-        public List<Product> searchedProduct = new List<Product>();
+        
         List<Shop> shopsList = new List<Shop>();
         List<Wife> womans = new List<Wife>();
 
-        public Husband()
+        public Husband(string name = "Pilipko")
         {
+            Name = name;
+            AddWomen();
             new Thread(new ThreadStart(HusbandJob)).Start();
         }
         void HusbandJob()
@@ -112,9 +117,10 @@ namespace ManWhoWentShopping
                         {
                             Monitor.Wait(woman.listMark);
                         }
-                        SearchProduct(shopsList, woman);
+                        List<Product> searchedProduct = new List<Product>();
+                        SearchProduct(shopsList, woman, ref searchedProduct);
                         
-                        ShowShearcheRezult();
+                        ShowShearcheRezult(woman, searchedProduct);
 
                         Thread.Sleep(1000 * rnd.Next(1, 3));
                         woman.manCanSearch = false;
@@ -128,22 +134,26 @@ namespace ManWhoWentShopping
         public void AddWomen()
         {
             womans.Add(Get.Wife());
-            womans.Add(Get.Wife());
-            womans.Add(Get.Wife());
+            womans.Add(Get.Wife("Maria"));
+            womans.Add(Get.Wife("Nadiya"));
         }
         void SetWantedList(IWoman woman)
         {
-            //string jsonWantedList = woman.GetWantedList();
-            //productWantedList = JsonSerializer.Deserialize<List<Product>>(jsonWantedList);
-            productWantedList = woman.GetWantedList(); //JsonSerializer.Deserialize<List<Product>>(jsonWantedList);
+            string jsonWantedList = woman.GetWantedList();
+            productWantedList = JsonSerializer.Deserialize<List<Product>>(jsonWantedList);
+            //JsonSerializer.Deserialize<List<Product>>(jsonWantedList);
+
+            //productWantedList = woman.GetWantedList();
         }
-        void GetWantedList(IWoman woman)
+        void GetWantedList(IWoman woman, List<Product> searchedProduct)
         {
-            woman.boughtList = searchedProduct;
+            string jsonSearchedList = JsonSerializer.Serialize(searchedProduct);
+            woman.boughtList = jsonSearchedList;
         }
 
-        void SearchProduct(List<Shop> shops, Wife woman)
+        void SearchProduct(List<Shop> shops, Wife woman, ref List<Product> searchedProduct)
         {
+            
             if (shops == null) throw new NullReferenceException();
             SetWantedList(woman);
             foreach (var item in shops)
@@ -155,15 +165,16 @@ namespace ManWhoWentShopping
                         searchedProduct.Add(Get.Product(searched));
                 }
             }
-            GetWantedList(woman);
+            GetWantedList(woman, searchedProduct);
         }
         public void UpdateShopList(List<Shop> shops)
         {
             shopsList = shops;
         }
         
-        public void ShowShearcheRezult()
+        public void ShowShearcheRezult(Wife woman, List<Product> searchedProduct)
         {
+            Console.WriteLine(" " + Name + " -> " + woman.Name);
             Console.WriteLine("Bought:");
             if (searchedProduct.Count != 0)
             {
@@ -175,7 +186,7 @@ namespace ManWhoWentShopping
                 }
                 Console.WriteLine(" Total price = " + totalPrice);
             }
-            else Console.WriteLine("I runing in ALL shops, but haven't what you want!");
+            else Console.WriteLine("I have been in ALL shops, but there aren't what you want there!");
         }
     }
     
@@ -183,6 +194,10 @@ namespace ManWhoWentShopping
     {
         public string Name { get; set; }
         public int Price { get; set; }
+
+        public Product()
+        {
+        }
         
         public Product(string name)
         {
@@ -241,10 +256,6 @@ namespace ManWhoWentShopping
 
 
             ConsoleShowAllProductList();
-            foreach (var husband in husbands)
-            {
-                husband.ShowShearcheRezult();
-            }
         }
         void UpdateShopsInHusband()
         {
@@ -269,10 +280,9 @@ namespace ManWhoWentShopping
         }
         void CreateHusbands()
         {
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 3; i++)
             {
-                husbands.Add(Get.Husband());
-                husbands[i].AddWomen();
+                husbands.Add(Get.Husband(Convert.ToString(i)));
             }
         }
         void ShopsLockated()
@@ -325,13 +335,13 @@ namespace ManWhoWentShopping
 
     class Get
     { 
-        static public Wife Wife()
+        static public Wife Wife(string name = "Julia")
         {
-            return new Wife();
+            return new Wife(name);
         }
-        static public Husband Husband()
+        static public Husband Husband(string name = "Pilipko")
         {
-            return new Husband();
+            return new Husband(name);
         }
         static public Shop Shop(string name = "default")
         {
