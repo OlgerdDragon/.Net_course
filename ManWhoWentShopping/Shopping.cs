@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 
 namespace ManWhoWentShopping
 {
@@ -15,14 +16,15 @@ namespace ManWhoWentShopping
     interface IMan
     {
         public void AddWomen();
-        public void SearchProduct(List<Shop> shops);
+        
 
     }
     interface IWoman
     {
         public List<Product> boughtList { get; set; }
         void AddWanted(string name);
-        public string GetWantedList();
+        public List<Product> GetWantedList();
+        //public string GetWantedList();
     }
     interface IThing
     {
@@ -37,13 +39,21 @@ namespace ManWhoWentShopping
 
     public class Wife: IWoman
     {
+        Random rnd = new Random();
         public List<Product> productList = new List<Product>();
         public List<Product> boughtList { get; set; }
+        public bool manCanSearch = false;
+        public object listMark = new object();
+        public Wife()
+        {
+            new Thread(new ThreadStart(WifeJob)).Start();
+        }
         public void AddWanted(string name)
         {
             productList.Add(Get.Product(name));
         }
-        public string GetWantedList()
+        //public string GetWantedList()
+        public List<Product> GetWantedList()
         {
             productList?.Clear();
             
@@ -52,48 +62,104 @@ namespace ManWhoWentShopping
             AddWanted("Lenovo");
             AddWanted("Onion");
 
-            string jsonWantedList = JsonSerializer.Serialize<List<Product>>(productList);
-            return jsonWantedList;
+            //string jsonWantedList = JsonSerializer.Serialize<List<Product>>(productList);
+            //return jsonWantedList;
+
+            return productList;
+
         }
+        void WifeJob()
+        {
+            while (true)
+            {
+                lock (listMark)
+                {
+                    while (manCanSearch)
+                    {
+                        Monitor.Wait(listMark);
+                    }
+                    Thread.Sleep(1000 * rnd.Next(1, 3));
+
+                    manCanSearch = true;
+                    Monitor.Pulse(listMark);
+                }
+            }
+        }
+
     }
+
     public class Husband :IMan
     {
+        Random rnd = new Random();
         public List<Product> productWantedList;
         public List<Product> searchedProduct = new List<Product>();
-
+        List<Shop> shopsList = new List<Shop>();
         List<Wife> womans = new List<Wife>();
+
+        public Husband()
+        {
+            new Thread(new ThreadStart(HusbandJob)).Start();
+        }
+        void HusbandJob()
+        {
+            while (true)
+            {
+                foreach (var woman in womans)
+                {
+                    lock (woman.listMark)
+                    {
+                        while (!woman.manCanSearch)
+                        {
+                            Monitor.Wait(woman.listMark);
+                        }
+                        SearchProduct(shopsList, woman);
+                        
+                        ShowShearcheRezult();
+
+                        Thread.Sleep(1000 * rnd.Next(1, 3));
+                        woman.manCanSearch = false;
+                        Monitor.Pulse(woman.listMark);
+                    }
+
+                }
+            }
+        }
 
         public void AddWomen()
         {
             womans.Add(Get.Wife());
+            womans.Add(Get.Wife());
+            womans.Add(Get.Wife());
         }
         void SetWantedList(IWoman woman)
-        { 
-            string jsonWantedList = woman.GetWantedList();
-            productWantedList = JsonSerializer.Deserialize<List<Product>>(jsonWantedList);
+        {
+            //string jsonWantedList = woman.GetWantedList();
+            //productWantedList = JsonSerializer.Deserialize<List<Product>>(jsonWantedList);
+            productWantedList = woman.GetWantedList(); //JsonSerializer.Deserialize<List<Product>>(jsonWantedList);
         }
         void GetWantedList(IWoman woman)
         {
             woman.boughtList = searchedProduct;
         }
 
-        public void SearchProduct(List<Shop> shops)
+        void SearchProduct(List<Shop> shops, Wife woman)
         {
             if (shops == null) throw new NullReferenceException();
-            foreach (var woman in womans)
+            SetWantedList(woman);
+            foreach (var item in shops)
             {
-                SetWantedList(woman);
-                foreach (var item in shops)
+                foreach (var neededProduct in productWantedList)
                 {
-                    foreach (var neededProduct in productWantedList)
-                    {
-                        Product searched = item.SearchNeededProduct(neededProduct);
-                        if (searched != null)
-                            searchedProduct.Add(Get.Product(searched));
-                    }
+                    Product searched = item.SearchNeededProduct(neededProduct);
+                    if (searched != null)
+                        searchedProduct.Add(Get.Product(searched));
                 }
-                GetWantedList(woman);
             }
+            GetWantedList(woman);
+        }
+        public void UpdateShopList(List<Shop> shops)
+        {
+            shopsList = shops;
         }
         
         public void ShowShearcheRezult()
@@ -165,13 +231,14 @@ namespace ManWhoWentShopping
     {
         List<Shop> shops = new List<Shop>();
         List<Husband> husbands = new List<Husband>();
-        List<Task> tasks = new List<Task>();
+        //List<Task> tasks = new List<Task>();
         public void NewDay()
         {
             CreateShops();
             CreateHusbands();
-            Runsearching(husbands);
-            
+            UpdateShopsInHusband();
+            //Runsearching(husbands);
+
 
             ConsoleShowAllProductList();
             foreach (var husband in husbands)
@@ -179,14 +246,21 @@ namespace ManWhoWentShopping
                 husband.ShowShearcheRezult();
             }
         }
-        async void Runsearching(List<Husband> men)
+        void UpdateShopsInHusband()
         {
-            foreach (var man in men)
+            foreach (var husband in husbands)
             {
-                tasks.Add(Task.Run(() => man.SearchProduct(shops)));
+                husband.UpdateShopList(shops);
             }
-            await Task.WhenAll(tasks.ToArray());
         }
+        //async void Runsearching(List<Husband> men)
+        //{
+        //    foreach (var man in men)
+        //    {
+        //        tasks.Add(Task.Run(() => man.SearchProduct(shops)));
+        //    }
+        //    await Task.WhenAll(tasks.ToArray());
+        //}
 
         void CreateShops()
         {
@@ -195,7 +269,7 @@ namespace ManWhoWentShopping
         }
         void CreateHusbands()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 1; i++)
             {
                 husbands.Add(Get.Husband());
                 husbands[i].AddWomen();
