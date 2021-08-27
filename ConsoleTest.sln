@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEquation", "AsyncEquat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEquation.Tests", "AsyncEquation.Tests\AsyncEquation.Tests.csproj", "{0E310327-7A80-4FAA-8BE1-CCB8C00C8B96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProducerVSConsumer", "ProducerVSConsumer\ProducerVSConsumer.csproj", "{0711B28A-0AA3-4126-806D-88E4714A9878}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProducerVSConsumer", "ProducerVSConsumer\ProducerVSConsumer.csproj", "{0711B28A-0AA3-4126-806D-88E4714A9878}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DamageIncaps", "DamageIncaps\DamageIncaps.csproj", "{C1B8CA58-61DF-4D6F-91B5-B87EAF7C0AE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{0711B28A-0AA3-4126-806D-88E4714A9878}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0711B28A-0AA3-4126-806D-88E4714A9878}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0711B28A-0AA3-4126-806D-88E4714A9878}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1B8CA58-61DF-4D6F-91B5-B87EAF7C0AE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1B8CA58-61DF-4D6F-91B5-B87EAF7C0AE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1B8CA58-61DF-4D6F-91B5-B87EAF7C0AE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1B8CA58-61DF-4D6F-91B5-B87EAF7C0AE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

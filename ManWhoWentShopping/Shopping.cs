@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
+//using MySql.Data.MySqlClient;
 
 namespace ManWhoWentShopping
 {
@@ -275,6 +276,7 @@ namespace ManWhoWentShopping
 
         void CreateShops()
         {
+            
             ShopsLockated();
             UploadProductList();
         }
@@ -285,13 +287,39 @@ namespace ManWhoWentShopping
                 husbands.Add(Get.Husband(Convert.ToString(i)));
             }
         }
+        string connStr = "server=localhost;user=root;database=shopping;paword=root;";
+        // MySqlConnection conn= new MySqlConnection(connStr);
+        // conn.Open();
+        string selectNameShops = "Select id_shop, name_shop from shopping.shops";
+        // MySqlComand comandSetNameShops = new MySqlComand(selectNameShops, conn);
+        // MySqlDataReader reader = comandSetNameShops.ExecuteReader();
         void ShopsLockated()
         {
+            //while (reader.Read()) 
+            //{
+            //    shops.Add(Get.Shop(reader[0].ToString());
+            //}
+            //reader.Close();
             shops.Add(Get.Shop("multiElectric"));
             shops.Add(Get.Shop("yourGarden"));
         }
         void UploadProductList()
         {
+            //while (reader.Read()) 
+            //{
+            //    int idShop = reader[0].ToInt32();
+            //    string selectProduct = "SELECT name_product, price_product FROM shopping.products inner join shopping.shops where name_shop=" + reader[0].ToString();
+
+            // MySqlComand comandProduct = new MySqlComand(selectProduct, conn);
+            // MySqlDataReader readerProduct = comandProduct.ExecuteReader();
+            // while(readerProduct.Read())
+            //{
+            // shops[idShop-1].Add(readerProduct[0].ToString(), readerProduct[1].ToInt32());
+            //}
+            //readerProduct.Close();
+            //}
+            //reader.Close();
+
             shops[0].Add("Sony", 100);
             shops[0].Add("Samsung", 80);
             shops[0].Add("Apple", 1);
@@ -323,13 +351,10 @@ namespace ManWhoWentShopping
         {
             Town Pogrebichche = Get.Town();
             Pogrebichche.NewDay();
-            
-
         }
         static void Main(string[] args)
         {
             Start();
-            
         }
     }
 
